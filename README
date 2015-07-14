@@ -1,0 +1,44 @@
+This is the code used in the work published here: http://mnras.oxfordjournals.org/content/437/3/2270.full.pdf 
+To constrain the radio galaxy counts down to 1/10th of the noise level.
+
+All of this code is for a single power law (e.g. dN/dS = nS^-alpha) 
+fitting using MCMC, with six 
+chains generated in parallel. Edit mcmc.param to reflect your data -- 
+all of the variables are explained within that file. The step sizes 
+are of particluar importance and may need to be changed between 
+different datasets; the proposal distribution widths (step sizes) 
+are hard-coded at the end of define_global_params.pro -- change 
+these accordingly. You can further edit the step-sizes in the 
+parameter file, but only for the first 2 chains. All of the routines 
+should be at least partially described within each of their preambles. 
+
+In principle, you should only need to edit mcmc.param and then just 
+call either mcmc_pt.pro (if you're running simulations) or mcmc_pt_vla.pro 
+(if you're running with real datasets). (If you're running simulations,
+you need to set your target parameter values on line 87 of mcmc_pt.pro
+and line 123 of mcmc_swap.pro.) 
+
+Check that all the code compiles by running the IDL batch file 
+compile_all within idl:
+
+IDL> @compile_all
+
+If you're running on a cluster, a sample PBS script is contained, called 
+README_run_sim.pbs (Xvfb MUST be installed on all of the cluster nodes for
+the code to work). If you don't have access to a cluster, you'll need a 
+machine with at least 6 threads; the code can be called from the command
+line. For instance, if you wanted to save all the chains, using a parameter
+file called whatever.param, you can call the code like this, within the 
+current/ directory:
+
+bash$ nohup echo "mcmc_pt, /SAVE_ALL, param_file='whatever.param' " | nice idl &
+
+All the output chains will be saved in the SAVEDIR directory (as defined
+in the parameter file) as chain-(random number).txt. So, "chain-125395.txt", 
+for instance.
+
+There is also a gridding approach encolosed, although it's not current. 
+parallel_grids.pro generates a script called gridpar_script.pro which calls
+gridpar.pro to do the analysis. In this way, the number of elements in the 
+parameter space is split evenly between the number of processors on the 
+machine, and the probabilites are calculated at each grid index. 

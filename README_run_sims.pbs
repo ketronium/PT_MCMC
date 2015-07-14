@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -o /home/ketron/cts_code/sim-10deg.log
+#PBS -S /bin/bash
+#PBS -l walltime=20:00:00
+#PBS -l nodes=1:ppn=7
+#PBS -l mem=20GB
+
+Xvfb :1 & 
+export DISPLAY=:1.0
+
+RUNPATH=/home/ketron/cts_code/current/
+cd $RUNPATH
+
+echo "mcmc_pt,/SAVE_ALL" | mpiexec.osc -n 1 idl 

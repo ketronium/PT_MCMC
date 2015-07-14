@@ -1,0 +1,89 @@
+# Parameter file for the MCMC analysis 
+
+
+#--------------------------------- PT MCMC Parameters -------------------------------
+
+N_SWAP 10.                          # Number of loops / 1.11 between parameter state swaps.
+NITER 50                           # Number of total iterations.
+BETA_MIN 0.001                        # Minimum of 1/Temperature. The smaller it is,
+                                     #   the wider the probability distribution widths will be.
+BETA_MAX 1.0                         # Inverse temperature of first chain. Should always be 1.0
+VERBOSE true                         # Set to false if you don't want progress printed to screen.
+
+#--------------------------------- Binning Criteria ---------------------------------
+
+LINEAR true                         # Log binning by default; set this to true for linear binning.
+NBINS   7                           # Number of bins + 1
+MINBIN  -440.                          # Minimum bin used (exclusive)
+MAXBIN  839                         # Maximum bin used (exclusive)
+BIN_UNITS uJy                        # Units of the binning. Choose 
+                                     #   one of: [Jy, mJy, uJy] 
+
+#---------------------------------- Survey Stuff ------------------------------------
+
+CATALOG_NAME  smap_scat.txt          # Name of catalog with extracted flux densities
+CATALOG_UNITS mjy                    # Units of the flux densities in catalog. Choose
+                                     #   from: [Jy, mJy, uJy]. SET AS UJY FOR SIMS...
+SKY_AREA  2.16                       # Total sky area of covered by the catalog
+SKY_UNITS deg2                       # Units of the above parameter SKY_AREA.
+                                     #   Choose one of: [sr, deg2, arcmin2]
+RMS 150.0                             # rms of observation in uJy/beam ONLY.
+RESOLUTION 5.0                      # Angular resolution of observation, in arcmin^2.
+
+#-------------------------------------- Priors --------------------------------------
+
+				     # Prior constraints on the fitted parameters. 
+				     # Choose these well.
+
+MIN_ALPHA -2.5                       # Minimum value for the slope of dN/dS
+MAX_ALPHA -0.1                       # Maximum value for the dN/dS slope.
+
+                                     # The SMIN and SMAX units should be the same
+	                             # as the FLUX_UNITS defined above.
+MIN_SMIN  1.0                        # Minimum of the fitted minimum flux. 
+MAX_SMIN   500.0                      # Maximum of the minimum fitted flux.
+MIN_SMAX   700.0                      # Minimum of the fitted maximum flux S_MAX
+MAX_SMAX   1000.0                     # Maximum of the fitted maximum flux
+
+                                     # The units of the normalization prior should
+				     #  be the same as the dN/dS units 
+				     # (i.e. C is in units /SKY_AREA/CATALOG_UNITS)
+MIN_C      0.0                       # Minimum of the normalization prior.
+MAX_C      100.0                     # Maximum of the Normalization prior.
+
+#--------------------------------Initial Guesses-----------------------------------------
+
+                                     # Initial guesses for each of the 4 parameters, 
+                                     # for each of the 6 chains.
+
+ALPHAS -2.2 -1.2 -1.7 -2.15 -1.95 -2.31 # Guesses for the dN/dS Slope
+SMINS  110. 210. 1.2 100. 260. 3.       # Flux minimum, in units of BIN_UNITS defined above.
+SMAXS  750. 850. 805. 900. 850. 890   # Flux maximum, in units of BIN_UNITS 
+NORMS  20.  17   10  40    10  12   # Normalization C (e.g. dN/dS=CS^alpha) in units 
+                                     #  of DNDS_UNITS defined below.
+DNDS_FLUX_UNITS JY                   # Choose from [Jy,mJy,uJy]
+DNDS_AREA_UNITS sr		     # [sr, deg2, arcmin2]
+                                     # Basically, these two dnds units should be consistent with the 
+                                     # C priors defined above. Choose units such that
+                                     # the range of MAX_C - MIN_C is reasonable (~order 10^2).
+
+#------------------------------------- Directories --------------------------------------
+
+SAVEDIR /home/ketron/cts_code/vla/     # Directory where the chains will be saved to,
+                                       #  and where the catalog is.
+CODEDIR /home/ketron/cts_code/test/    # Directory where the code is located.
+
+#---------------------------- Proposal Distribution Widths -------------------------------
+
+				     # All chains have these widths hard-coded as 
+				     # 1/10th of the prior widths by default.
+
+WIDTH_A1  1.0                      # Proposal distribution width for alpha, chain1
+WIDTH_S1  1.0 #0.8                       # Proposal distribution width for SMIN, chain1
+WIDTH_SX1 1.0 #0.5                       # Proposal distribution width for SMAX, chain1
+WIDTH_C1  1.0 #0.5                       # Proposal distribution width for C, chain1
+
+WIDTH_A2  1.0			     # Same, but for the second chain.
+WIDTH_S2  1.0
+WIDTH_SX2 1.0 #0.75
+WIDTH_C2  1.0 #0.75
